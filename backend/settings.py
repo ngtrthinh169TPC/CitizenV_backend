@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 '.herokuapp.com', '.citizenv-heroku-03']
+                 '.herokuapp.com', '.citizenv-backend-03']
 
 
 # Application definition
