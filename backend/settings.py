@@ -143,3 +143,7 @@ DATABASES['default'].update(db_from_env)
 
 
 django_heroku.settings(locals())
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
