@@ -37,7 +37,7 @@ class UserAPI(viewsets.ModelViewSet):
             permission=next_permission(creator.permission),
             # permission=new_permission,
             name_of_unit=request.data.get('name_of_unit'), classification=request.data.get('classification'), entry_permit=request.data.get('entry_permit'))
-        return Response(status=201, data={'token': token.key, 'user_id': user.pk, 'username': user.username, 'new_account': account.account_id})
+        return Response(status=201, data={'username': user.username, 'account_id': account.account_id})
 
 
 class CustomAuthToken(ObtainAuthToken):
@@ -47,8 +47,13 @@ class CustomAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
+        account = user.account
         return Response(status=200, data={
             'token': token.key,
-            'user_id': user.pk,
-            'username': user.username
+            'account_id': account.account_id,
+            'permission': account.permission,
+            'name_of_unit': account.name_of_unit,
+            'classification': account.classification,
+            'entry_permit': account.entry_permit,
+            'progress': account.progress,
         })
