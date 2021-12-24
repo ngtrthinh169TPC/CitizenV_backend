@@ -10,3 +10,11 @@ class AccountAPI(APIView):
         accounts = Account.objects.all()
         serializer = AccountSerializer(accounts, many=True)
         return Response(data=serializer.data)
+
+
+class ChildAccountAPI(APIView):
+    def get(self, request):
+        children_account = Account.objects.filter(
+            managed_by=request.data.get('account_id'))
+        serializer = AccountSerializer(children_account, many=True)
+        return Response(data=serializer.data)

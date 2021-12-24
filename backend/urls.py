@@ -3,9 +3,8 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 
-from accounts.views import AccountAPI
+from accounts.views import AccountAPI, ChildAccountAPI
 from users.views import UserAPI, CustomAuthToken
-# from citizenss.views import CitizenAPI, CitizenAgesAPI
 from citizens.views import CitizenAPI
 
 
@@ -23,6 +22,7 @@ urlpatterns += [
 
 urlpatterns += [
     path('account/', AccountAPI.as_view(), name="account"),
+    path('account/children/', ChildAccountAPI.as_view(), name='child-account'),
     path('citizen/', CitizenAPI.as_view(), name="citizen"),
     # path('statistics/ages/', CitizenAgesAPI.as_view(), name="citizen_ages"),
 ]
