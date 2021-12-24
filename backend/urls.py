@@ -4,7 +4,7 @@ from django.urls import path
 from rest_framework import routers
 
 from accounts.views import AccountAPI, ChildAccountAPI
-from users.views import UserAPI, CustomAuthToken
+from users.views import UserAPI, CustomAuthToken, WhoAmI
 from citizens.views import CitizenAPI
 
 
@@ -18,6 +18,7 @@ router.register(r'user', UserAPI)
 urlpatterns += [
     url('', include(router.urls)),
     path('api-token-auth/', CustomAuthToken.as_view(), name="obtain-token"),
+    path('whoami/', WhoAmI.as_view(), name="who-am-i")
 ]
 
 urlpatterns += [

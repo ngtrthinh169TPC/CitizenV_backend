@@ -5,7 +5,7 @@ from accounts.models import Account
 
 
 class Citizen(models.Model):
-    citizen_id = models.BigIntegerField(primary_key=True)
+    citizen_id = models.CharField(primary_key=True, max_length=12)
     managed_by = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=64)

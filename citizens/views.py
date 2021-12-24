@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 
 from .models import Citizen
 from .serializers import CitizenSerializer
+from accounts.models import Account
 
 
 class CitizenAPI(APIView):
@@ -13,8 +14,22 @@ class CitizenAPI(APIView):
 
     def post(self, request):
         serializer = CitizenSerializer(data=request.data)
+        account = Account.objects.filter(user=request.user)
         if serializer.is_valid():
-            serializer.save()
+            Citizen.objects.create(
+                citizen_id=request.data.get('citizen_id'),
+                managed_by=account[0],
+                first_name=request.data.get('first_name'),
+                last_name=request.data.get('last_name'),
+                date_of_birth=request.data.get('date_of_birth'),
+                place_of_birth=request.data.get('place_of_birth'),
+                place_of_origin=request.data.get('place_of_origin'),
+                permanent_address=request.data.get('permanent_address'),
+                temporary_address=request.data.get('temporary_address'),
+                religious=request.data.get('religious'),
+                occupation=request.data.get('occupation'),
+                education=request.data.get('education')
+            )
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
