@@ -20,8 +20,7 @@ class Citizen(models.Model):
     citizen_id = models.CharField(max_length=12, unique=True, blank=True)
     managed_by = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True)
-    first_name = models.CharField(max_length=1024)
-    last_name = models.CharField(max_length=1024)
+    full_name = models.CharField(max_length=1024)
     gender = models.CharField(max_length=8, choices=GENDER_CHOICES)
     date_of_birth = models.DateField(blank=True, default=date(1, 1, 1))
     place_of_birth = models.CharField(default="unknown", max_length=64)

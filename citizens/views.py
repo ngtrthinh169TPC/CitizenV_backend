@@ -24,8 +24,7 @@ class CitizenAPI(APIView):
             Citizen.objects.create(
                 citizen_id=request.data.get('citizen_id'),
                 managed_by=account[0],
-                first_name=request.data.get('first_name'),
-                last_name=request.data.get('last_name'),
+                full_name=request.data.get('full_name'),
                 gender=request.data.get('gender'),
                 date_of_birth=request.data.get('date_of_birth'),
                 place_of_birth=request.data.get('place_of_birth'),
