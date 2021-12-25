@@ -38,7 +38,8 @@ class EntryPermitAPI(APIView):
             self.entry_permit_recursion(acc)
 
     def patch(self, request):
-        account = Account.objects.get(user=request.user)
+        account = Account.objects.get(
+            account_id=request.data.get('account_id'))
         account.entry_permit = request.data.get('entry_permit')
         account.save()
 
@@ -53,6 +54,9 @@ class ProgressAPI(APIView):
         account = Account.objects.get(user=request.user)
         total = Account.objects.filter(managed_by=account)
         completed = total.filter(completed=True).count()
-        print(total.count())
-        print(completed)
         return Response(status=200, data={'total': total.count(), 'completed': completed})
+
+
+class AccountManagedAPI(APIView):
+    def get(self, request):
+        pass

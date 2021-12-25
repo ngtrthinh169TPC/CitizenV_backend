@@ -12,15 +12,14 @@ from accounts.serializers import AccountSerializer
 
 class ReportAPI(APIView):
     def post(self, request):
-        account = Account.objects.filter(user=request.user)
+        account = Account.objects.get(user=request.user)
         Report.objects.create(
             reporter=request.data.get('reporter'),
             completed=request.data.get('completed'),
-            account=account[0],
+            account=account,
         )
-        serializer = AccountSerializer(
-            account[0], request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+        account.completed = request.data.get('completed')
+        account.save()
+        if (request.data.get('completed') == "True"):
+            print(account.managed_by)
+        return Response(status=201, data={'account_id': account.account_id, 'completed': account.completed})
