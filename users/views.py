@@ -56,7 +56,7 @@ class CustomAuthToken(ObtainAuthToken):
             'name_of_unit': account.name_of_unit,
             'classification': account.classification,
             'entry_permit': account.entry_permit,
-            'progress': account.progress,
+            'completed': account.completed,
         })
 
 
