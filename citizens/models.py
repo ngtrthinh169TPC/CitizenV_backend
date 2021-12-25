@@ -16,7 +16,8 @@ class Citizen(models.Model):
     ]
 
     object_id = models.AutoField(primary_key=True)
-    citizen_id = models.CharField(max_length=12, unique=True, blank=True)
+    citizen_id = models.CharField(
+        max_length=12, unique=True, blank=True, null=True)
     managed_by = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True)
     full_name = models.CharField(max_length=1024)
