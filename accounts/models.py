@@ -25,7 +25,7 @@ class Account(models.Model):
     name_of_unit = models.CharField(max_length=256)
     classification = models.CharField(max_length=256, blank=True)
     entry_permit = models.BooleanField(default=False)
-    progress = models.IntegerField(default=0)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.classification + " " + self.name_of_unit + " (" + self.account_id + ")"

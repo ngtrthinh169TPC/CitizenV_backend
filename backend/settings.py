@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'citizens',
+    'reports',
     'users',
 ]
 
@@ -113,7 +114,7 @@ USE_I18N = False
 
 USE_L10N = False
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

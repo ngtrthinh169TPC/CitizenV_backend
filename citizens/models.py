@@ -1,5 +1,6 @@
 from datetime import date
 from django.db import models
+from django.utils import timezone
 
 from accounts.models import Account
 
@@ -19,8 +20,8 @@ class Citizen(models.Model):
     citizen_id = models.CharField(max_length=12, unique=True, blank=True)
     managed_by = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True)
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
+    first_name = models.CharField(max_length=1024)
+    last_name = models.CharField(max_length=1024)
     gender = models.CharField(max_length=8, choices=GENDER_CHOICES)
     date_of_birth = models.DateField(blank=True, default=date(1, 1, 1))
     place_of_birth = models.CharField(default="unknown", max_length=64)
@@ -30,3 +31,4 @@ class Citizen(models.Model):
     religious = models.CharField(default="none", max_length=64)
     occupation = models.CharField(default="none", max_length=256)
     education = models.CharField(default="none", max_length=256)
+    created_at = models.DateTimeField(default=timezone.now)
