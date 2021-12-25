@@ -8,7 +8,12 @@ from accounts.models import Account
 
 class CitizenAPI(APIView):
     def get(self, request):
-        citizens = Citizen.objects.all()
+        account = Account.objects.filter(user=request.user)
+        if account[0].account_id == '000admin':
+            citizens = Citizen.objects.all()
+        else:
+            citizens = Citizen.objects.filter(
+                managed_by__account_id__startswith=account[0].account_id)
         serializer = CitizenSerializer(citizens, many=True)
         return Response(data=serializer.data)
 
