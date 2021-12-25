@@ -23,7 +23,6 @@ class ChildAccountAPI(APIView):
     def patch(self, request):
         account = Account.objects.get(
             account_id=request.data.get('account_id'))
-        # account.account_id = request.data.get('account_id')
         account.name_of_unit = request.data.get('name_of_unit')
         account.classification = request.data.get('classification')
         account.save()
@@ -47,3 +46,13 @@ class EntryPermitAPI(APIView):
             self.entry_permit_recursion(account)
 
         return Response(status=204)
+
+
+class ProgressAPI(APIView):
+    def get(self, request):
+        account = Account.objects.get(user=request.user)
+        total = Account.objects.filter(managed_by=account)
+        completed = total.filter(completed=True).count()
+        print(total.count())
+        print(completed)
+        return Response(status=200, data={'total': total.count(), 'completed': completed})
