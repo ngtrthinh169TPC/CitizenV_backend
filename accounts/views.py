@@ -20,6 +20,15 @@ class ChildAccountAPI(APIView):
         serializer = AccountSerializer(children_account, many=True)
         return Response(data=serializer.data)
 
+    def patch(self, request):
+        account = Account.objects.get(
+            account_id=request.data.get('account_id'))
+        # account.account_id = request.data.get('account_id')
+        account.name_of_unit = request.data.get('name_of_unit')
+        account.classification = request.data.get('classification')
+        account.save()
+        return Response(status=204)
+
 
 class EntryPermitAPI(APIView):
     def entry_permit_recursion(self, account):
