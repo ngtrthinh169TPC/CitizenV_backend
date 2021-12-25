@@ -1,5 +1,5 @@
-citizenvsuperuser
-citizenvpassword
+superusercitizenv
+citizenv
 
 citizenvadmin
 adminv123

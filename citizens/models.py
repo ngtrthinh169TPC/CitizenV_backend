@@ -5,11 +5,23 @@ from accounts.models import Account
 
 
 class Citizen(models.Model):
-    citizen_id = models.CharField(primary_key=True, max_length=12)
+    male = "Male"
+    female = "Female"
+    unknown = "unknown"
+
+    GENDER_CHOICES = [
+        (male, 'male'),
+        (female, 'female'),
+        (unknown, 'unknown'),
+    ]
+
+    object_id = models.AutoField(primary_key=True)
+    citizen_id = models.CharField(max_length=12, unique=True, blank=True)
     managed_by = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
+    gender = models.CharField(max_length=8, choices=GENDER_CHOICES)
     date_of_birth = models.DateField(blank=True, default=date(1, 1, 1))
     place_of_birth = models.CharField(default="unknown", max_length=64)
     place_of_origin = models.CharField(default="unknown", max_length=64)
