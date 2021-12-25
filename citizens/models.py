@@ -1,6 +1,5 @@
 from datetime import date
 from django.db import models
-from django.utils import timezone
 
 from accounts.models import Account
 
@@ -30,4 +29,4 @@ class Citizen(models.Model):
     religious = models.CharField(default="none", max_length=64)
     occupation = models.CharField(default="none", max_length=256)
     education = models.CharField(default="none", max_length=256)
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
