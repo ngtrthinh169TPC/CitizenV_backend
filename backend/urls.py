@@ -4,7 +4,7 @@ from django.urls import path
 from rest_framework import routers
 
 from accounts.views import AccountAPI, EntryPermitAPI, ChildAccountAPI, ProgressAPI
-from citizens.views import CitizenAPI, CitizenGenderAPI, CitizenReligiousAPI, CitizenEducationAPI
+from citizens.views import CitizenAPI, CitizenStatisticAPI
 from reports.views import ReportAPI
 from users.views import UserAPI, CustomAuthToken, WhoAmI
 
@@ -33,12 +33,8 @@ urlpatterns += [
 urlpatterns += [
     path('citizen/', CitizenAPI.as_view(), name="citizen"),
     # path('statistics/ages/', CitizenAgesAPI.as_view(), name="citizen_ages"),
-    path('citizen/stats/gender/', CitizenGenderAPI.as_view(),
-         name='citizen-gender-statistics'),
-    path('citizen/stats/religious/', CitizenReligiousAPI.as_view(),
-         name='citizen-religious-statistics'),
-    path('citizen/stats/education/', CitizenEducationAPI.as_view(),
-         name='citizen-education-statistics'),
+    path('citizen/stats/', CitizenStatisticAPI.as_view(),
+         name='citizen-statistics'),
 ]
 
 urlpatterns += [

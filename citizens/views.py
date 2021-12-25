@@ -65,22 +65,13 @@ class CitizenAPI(APIView):
 #         ]
 #         return Response(data=arr)
 
-class CitizenGenderAPI(APIView):
+
+class CitizenStatisticAPI(APIView):
     def get(self, request):
-        result = (Citizen.objects.values('gender').annotate(
+        gender = (Citizen.objects.values('gender').annotate(
             count=Count('gender')).order_by())
-        return Response(status=200, data=result)
-
-
-class CitizenReligiousAPI(APIView):
-    def get(self, request):
-        result = (Citizen.objects.values('religious').annotate(
+        religious = (Citizen.objects.values('religious').annotate(
             count=Count('religious')).order_by())
-        return Response(status=200, data=result)
-
-
-class CitizenEducationAPI(APIView):
-    def get(self, request):
-        result = (Citizen.objects.values('education').annotate(
+        education = (Citizen.objects.values('education').annotate(
             count=Count('education')).order_by())
-        return Response(status=200, data=result)
+        return Response(status=200, data={'gender': gender, 'religious': religious, 'education': education})
