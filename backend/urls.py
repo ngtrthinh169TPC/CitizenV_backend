@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 
-from accounts.views import AccountAPI, ChildAccountAPI
+from accounts.views import AccountAPI, EntryPermitAPI, ChildAccountAPI
 from citizens.views import CitizenAPI
 from reports.views import ReportAPI
 from users.views import UserAPI, CustomAuthToken, WhoAmI
@@ -25,7 +25,14 @@ urlpatterns += [
 urlpatterns += [
     path('account/', AccountAPI.as_view(), name="account"),
     path('account/children/', ChildAccountAPI.as_view(), name='child-account'),
+    path('account/entry/', EntryPermitAPI.as_view(), name='change-entry-permit')
+]
+
+urlpatterns += [
     path('citizen/', CitizenAPI.as_view(), name="citizen"),
     # path('statistics/ages/', CitizenAgesAPI.as_view(), name="citizen_ages"),
+]
+
+urlpatterns += [
     path('report/', ReportAPI.as_view(), name="report")
 ]
