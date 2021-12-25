@@ -6,4 +6,4 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('account_id', 'managed_by', 'user', 'permission',
-                  'name_of_unit', 'classification', 'entry_permit')
+                  'name_of_unit', 'classification', 'entry_permit', 'progress')
