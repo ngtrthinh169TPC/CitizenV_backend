@@ -26,13 +26,18 @@ class UserAPI(viewsets.ModelViewSet):
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        creator = Account.objects.get(
-            account_id=request.data.get('creator_id'))
+        creator = Account.objects.get(user=request.user)
         user = User.objects.create_user(username=request.data.get(
             'username'), password=request.data.get('password'))
         token = Token.objects.create(user=user)
+        if (creator.account_id == "000admin"):
+            new_account_id = request.data.get('account_id')
+        else:
+            new_account_id = creator.account_id + \
+                request.data.get('account_id')
         account = Account.objects.create(
-            account_id=request.data.get('account_id'),
+            # account_id=request.data.get('account_id'),
+            account_id=new_account_id,
             managed_by=creator,
             user=user,
             permission=next_permission(creator.permission),
