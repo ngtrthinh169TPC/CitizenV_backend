@@ -1,3 +1,5 @@
+from django.db.models import Count
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -62,3 +64,23 @@ class CitizenAPI(APIView):
 #             {"11-20": 6},
 #         ]
 #         return Response(data=arr)
+
+class CitizenGenderAPI(APIView):
+    def get(self, request):
+        result = (Citizen.objects.values('gender').annotate(
+            count=Count('gender')).order_by())
+        return Response(status=200, data=result)
+
+
+class CitizenReligiousAPI(APIView):
+    def get(self, request):
+        result = (Citizen.objects.values('religious').annotate(
+            count=Count('religious')).order_by())
+        return Response(status=200, data=result)
+
+
+class CitizenEducationAPI(APIView):
+    def get(self, request):
+        result = (Citizen.objects.values('education').annotate(
+            count=Count('education')).order_by())
+        return Response(status=200, data=result)
