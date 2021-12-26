@@ -68,9 +68,12 @@ class CitizenAPI(APIView):
 
 class CitizenStatisticAPI(APIView):
     def get(self, request):
-        user = Account.objects.get(user=request.user)
-        citizens = Citizen.objects.filter(
-            managed_by__account_id__startswith=user.account_id)
+        account = Account.objects.get(user=request.user)
+        if (account.account_id == "000admin"):
+            citizens = Citizen.objects.all()
+        else:
+            citizens = Citizen.objects.filter(
+                managed_by__account_id__startswith=account.account_id)
         gender = citizens.values('gender').annotate(
             count=Count('gender')).order_by()
         religious = citizens.values('religious').annotate(
