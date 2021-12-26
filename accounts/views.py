@@ -36,7 +36,7 @@ class ChildAccountAPI(APIView):
 
 
 class ChildofChildAccountAPI(APIView):
-    def get(self, request):
+    def post(self, request):
         account = Account.objects.get(user=request.user)
         if (account.permission.startswith("B")):
             return Response(status=401, data={'detail': "Your account does not have access to this."})
