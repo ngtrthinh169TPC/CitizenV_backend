@@ -112,9 +112,9 @@ class FilterCitizenAPI(APIView):
         requested = get_object_or_404(
             accounts, account_id=request.data.get('account_id'))
         if requested.account_id == '000admin':
-            citizens = Citizen.objects.all().order_by('account_id')
+            citizens = Citizen.objects.all().order_by('citizen_id')
         else:
             citizens = Citizen.objects.filter(
-                managed_by__account_id__startswith=requested.account_id).order_by('account_id')
+                managed_by__account_id__startswith=requested.account_id).order_by('citizen_id')
         serializer = CitizenSerializer(citizens, many=True)
         return Response(status=200, data=serializer.data)
