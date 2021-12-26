@@ -7,7 +7,7 @@ from accounts.models import Account
 class Citizen(models.Model):
     male = "Male"
     female = "Female"
-    unknown = "unknown"
+    unknown = ""
 
     GENDER_CHOICES = [
         (male, 'male'),

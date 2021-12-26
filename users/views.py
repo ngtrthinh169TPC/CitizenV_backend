@@ -24,9 +24,12 @@ class UserAPI(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def create(self, request):
+        creator = Account.objects.get(user=request.user)
+        if (creator.permission == "B2"):
+            return Response(status=401, data={'detail': "Your account does not have access to this."})
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        creator = Account.objects.get(user=request.user)
         user = User.objects.create_user(username=request.data.get(
             'username'), password=request.data.get('password'))
         token = Token.objects.create(user=user)
@@ -36,13 +39,21 @@ class UserAPI(viewsets.ModelViewSet):
             new_account_id = creator.account_id + \
                 request.data.get('account_id')
         account = Account.objects.create(
-            # account_id=request.data.get('account_id'),
             account_id=new_account_id,
             managed_by=creator,
             user=user,
             permission=next_permission(creator.permission),
-            # permission=new_permission,
-            name_of_unit=request.data.get('name_of_unit'), classification=request.data.get('classification'), entry_permit=request.data.get('entry_permit'))
+            name_of_unit=request.data.get('name_of_unit'),
+        )
+        if request.data.get('classification'):
+            account.classification = request.data.get('classification')
+            account.save()
+        if request.data.get('entry_permit'):
+            account.entry_permit = request.data.get('entry_permit')
+            account.save()
+        if (account.permission == "B2"):
+            account.completed = True
+            account.save()
         return Response(status=201, data={'username': user.username, 'account_id': account.account_id})
 
 

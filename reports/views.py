@@ -13,6 +13,9 @@ from accounts.serializers import AccountSerializer
 class ReportAPI(APIView):
     def post(self, request):
         account = Account.objects.get(user=request.user)
+        if (account.permission != "B1"):
+            return Response(status=401, data={'detail': "Your account does not have access to this."})
+
         Report.objects.create(
             reporter=request.data.get('reporter'),
             completed=request.data.get('completed'),

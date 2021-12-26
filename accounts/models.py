@@ -23,7 +23,7 @@ class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     permission = models.CharField(max_length=2, choices=PERMISSION_CHOICES)
     name_of_unit = models.CharField(max_length=256)
-    classification = models.CharField(max_length=256, blank=True)
+    classification = models.CharField(max_length=256, blank=True, default="")
     entry_permit = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
 

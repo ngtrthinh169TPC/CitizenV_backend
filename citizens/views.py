@@ -1,4 +1,5 @@
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -20,12 +21,15 @@ class CitizenAPI(APIView):
         return Response(status=200, data=serializer.data)
 
     def post(self, request):
+        account = Account.objects.get(user=request.user)
+        if (account.permission.startswith("A")):
+            return Response(status=401, data={'detail': "Your account does not have access to this."})
+
         serializer = CitizenSerializer(data=request.data)
-        account = Account.objects.filter(user=request.user)
         if serializer.is_valid():
             Citizen.objects.create(
                 citizen_id=request.data.get('citizen_id'),
-                managed_by=account[0],
+                managed_by=account,
                 full_name=request.data.get('full_name'),
                 gender=request.data.get('gender'),
                 date_of_birth=request.data.get('date_of_birth'),
@@ -41,6 +45,10 @@ class CitizenAPI(APIView):
         return Response(serializer.errors, status=400)
 
     def patch(self, request):
+        account = Account.objects.get(user=request.user)
+        if (account.permission.startswith("A")):
+            return Response(status=401, data={'detail': "Your account does not have access to this."})
+
         citizen = Citizen.objects.get(
             object_id=request.data.get("object_id"))
         serializer = CitizenSerializer(
@@ -51,6 +59,10 @@ class CitizenAPI(APIView):
         return Response(serializer.errors, status=400)
 
     def delete(self, request):
+        account = Account.objects.get(user=request.user)
+        if (account.permission.startswith("A")):
+            return Response(status=401, data={'detail': "Your account does not have access to this."})
+
         citizen = Citizen.objects.get(
             object_id=request.data.get("object_id"))
         citizen.delete()
@@ -69,6 +81,9 @@ class CitizenAPI(APIView):
 class CitizenStatisticAPI(APIView):
     def get(self, request):
         account = Account.objects.get(user=request.user)
+        if (account.permission == "B2"):
+            return Response(status=401, data={'detail': "Your account does not have access to this."})
+
         if (account.account_id == "000admin"):
             citizens = Citizen.objects.all()
         else:
@@ -86,15 +101,20 @@ class CitizenStatisticAPI(APIView):
 class FilterCitizenAPI(APIView):
     def get(self, request):
         account = Account.objects.get(user=request.user)
-        requested = request.data.get('account_id')
-        if (requested.startswith(account.account_id) | (account.account_id == "000admin")):
-            finding_acc = Account.objects.get(account_id=requested)
-            if finding_acc.account_id == '000admin':
-                citizens = Citizen.objects.all()
-            else:
-                citizens = Citizen.objects.filter(
-                    managed_by__account_id__startswith=finding_acc.account_id)
-            serializer = CitizenSerializer(citizens, many=True)
-            return Response(status=200, data=serializer.data)
+        if (account.permission.startswith("B")):
+            return Response(status=401, data={'detail': "Your account does not have access to this."})
+
+        if (account.account_id == "000admin"):
+            accounts = Account.objects.all()
         else:
-            return Response(status=400)
+            accounts = Account.objects.filter(
+                account_id__startswith=account.account_id)
+        requested = get_object_or_404(
+            accounts, account_id=request.data.get('account_id'))
+        if requested.account_id == '000admin':
+            citizens = Citizen.objects.all().order_by('account_id')
+        else:
+            citizens = Citizen.objects.filter(
+                managed_by__account_id__startswith=requested.account_id).order_by('account_id')
+        serializer = CitizenSerializer(citizens, many=True)
+        return Response(status=200, data=serializer.data)
