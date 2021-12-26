@@ -38,6 +38,8 @@ class UserAPI(viewsets.ModelViewSet):
         else:
             new_account_id = creator.account_id + \
                 request.data.get('account_id')
+        if (new_account_id.len() != 2):
+            return Response(status=400, data={'detail': "account_id must have exactly 2 characters"})
         account = Account.objects.create(
             account_id=new_account_id,
             managed_by=creator,
