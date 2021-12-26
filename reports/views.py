@@ -20,6 +20,16 @@ class ReportAPI(APIView):
         )
         account.completed = request.data.get('completed')
         account.save()
-        if (request.data.get('completed') == "True"):
-            print(account.managed_by)
+        manager_acc = account.managed_by
+        while (manager_acc != None):
+            total = Account.objects.filter(managed_by=manager_acc).count()
+            completed = Account.objects.filter(
+                managed_by=manager_acc, completed=True).count()
+            if (total == completed):
+                manager_acc.completed = True
+                manager_acc.save()
+            else:
+                manager_acc.completed = False
+                manager_acc.save()
+            manager_acc = manager_acc.managed_by
         return Response(status=201, data={'account_id': account.account_id, 'completed': account.completed})
