@@ -10,14 +10,14 @@ from accounts.models import Account
 
 class CitizenAPI(APIView):
     def get(self, request):
-        account = Account.objects.filter(user=request.user)
-        if account[0].account_id == '000admin':
+        account = Account.objects.get(user=request.user)
+        if account.account_id == '000admin':
             citizens = Citizen.objects.all()
         else:
             citizens = Citizen.objects.filter(
-                managed_by__account_id__startswith=account[0].account_id)
+                managed_by__account_id__startswith=account.account_id)
         serializer = CitizenSerializer(citizens, many=True)
-        return Response(data=serializer.data)
+        return Response(status=200, data=serializer.data)
 
     def post(self, request):
         serializer = CitizenSerializer(data=request.data)
@@ -78,3 +78,20 @@ class CitizenStatisticAPI(APIView):
         education = citizens.values('education').annotate(
             count=Count('education')).order_by()
         return Response(status=200, data={'gender': gender, 'religious': religious, 'education': education})
+
+
+class FilterCitizenAPI(APIView):
+    def get(self, request):
+        account = Account.objects.get(user=request.user)
+        requested = request.data.get('account_id')
+        if (requested.startswith(account.account_id) | (account.account_id == "000admin")):
+            finding_acc = Account.objects.get(account_id=requested)
+            if finding_acc.account_id == '000admin':
+                citizens = Citizen.objects.all()
+            else:
+                citizens = Citizen.objects.filter(
+                    managed_by__account_id__startswith=finding_acc.account_id)
+            serializer = CitizenSerializer(citizens, many=True)
+            return Response(status=200, data=serializer.data)
+        else:
+            return Response(status=400)
