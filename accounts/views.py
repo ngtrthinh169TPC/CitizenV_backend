@@ -5,13 +5,6 @@ from .models import Account
 from .serializers import AccountSerializer
 
 
-class AccountAPI(APIView):
-    def get(self, request):
-        accounts = Account.objects.all()
-        serializer = AccountSerializer(accounts, many=True)
-        return Response(data=serializer.data)
-
-
 class ChildAccountAPI(APIView):
     def get(self, request):
         children_account = Account.objects.filter(
