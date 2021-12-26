@@ -44,7 +44,11 @@ class EntryPermitAPI(APIView):
         account.save()
 
         if (request.data.get('entry_permit') == "False"):
-            self.entry_permit_recursion(account)
+            accounts = Account.objects.filter(
+                account_id__startswith=request.data.get('account_id'))
+            for acc in accounts:
+                acc.entry_permit = False
+                acc.save()
 
         return Response(status=204)
 

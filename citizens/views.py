@@ -68,10 +68,13 @@ class CitizenAPI(APIView):
 
 class CitizenStatisticAPI(APIView):
     def get(self, request):
-        gender = (Citizen.objects.values('gender').annotate(
-            count=Count('gender')).order_by())
-        religious = (Citizen.objects.values('religious').annotate(
-            count=Count('religious')).order_by())
-        education = (Citizen.objects.values('education').annotate(
-            count=Count('education')).order_by())
+        user = Account.objects.get(user=request.user)
+        citizens = Citizen.objects.filter(
+            managed_by__account_id__startswith=user.account_id)
+        gender = citizens.values('gender').annotate(
+            count=Count('gender')).order_by()
+        religious = citizens.values('religious').annotate(
+            count=Count('religious')).order_by()
+        education = citizens.values('education').annotate(
+            count=Count('education')).order_by()
         return Response(status=200, data={'gender': gender, 'religious': religious, 'education': education})
