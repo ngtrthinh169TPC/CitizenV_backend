@@ -1,4 +1,3 @@
-from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,9 +15,9 @@ class AccountAPI(APIView):
 class ChildAccountAPI(APIView):
     def get(self, request):
         children_account = Account.objects.filter(
-            Q(managed_by__user=request.user))
+            managed_by__user=request.user)
         serializer = AccountSerializer(children_account, many=True)
-        return Response(data=serializer.data)
+        return Response(status=200, data=serializer.data)
 
     def patch(self, request):
         account = Account.objects.get(
@@ -27,6 +26,19 @@ class ChildAccountAPI(APIView):
         account.classification = request.data.get('classification')
         account.save()
         return Response(status=204)
+
+
+class ChildofChildAccountAPI(APIView):
+    def get(self, request):
+        account = Account.objects.get(user=request.user)
+        requested_acc = request.data.get('account_id')
+        if (requested_acc.startswith(account.account_id)):
+            children_account = Account.objects.filter(
+                managed_by__account_id=requested_acc)
+            serializer = AccountSerializer(children_account, many=True)
+            return Response(status=200, data=serializer.data)
+        else:
+            return Response(status=400)
 
 
 class EntryPermitAPI(APIView):
