@@ -93,3 +93,16 @@ class ProgressAPI(APIView):
         total = Account.objects.filter(managed_by=account)
         completed = total.filter(completed=True).count()
         return Response(status=200, data={'total': total.count(), 'completed': completed})
+
+
+class AncestorAccountAPI(APIView):
+    def get(self, request):
+        account = Account.objects.get(user=request.user)
+
+        ancestors = {}
+        finding = account.managed_by
+        while (finding):
+            ancestors[finding.permission] = finding.name_of_unit
+            finding = finding.managed_by
+
+        return Response(status=200, data=ancestors)

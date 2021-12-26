@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 
-from accounts.views import ChildofChildAccountAPI, EntryPermitAPI, ChildAccountAPI, ProgressAPI
+from accounts.views import ChildofChildAccountAPI, EntryPermitAPI, ChildAccountAPI, ProgressAPI, AncestorAccountAPI
 from citizens.views import CitizenAPI, CitizenStatisticAPI, FilterCitizenAPI
 from reports.views import ReportAPI
 from users.views import UserAPI, CustomAuthToken, WhoAmI
@@ -29,6 +29,8 @@ urlpatterns += [
          name='child-account-progress'),
     path('account/children/find/', ChildofChildAccountAPI.as_view(),
          name='find-child-of-child'),
+    path('account/ancestors/', AncestorAccountAPI.as_view(),
+         name='account-ancestors')
 ]
 
 urlpatterns += [
