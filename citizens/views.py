@@ -42,7 +42,7 @@ class CitizenAPI(APIView):
 
     def patch(self, request):
         citizen = Citizen.objects.get(
-            citizen_id=request.data.get("citizen_id"))
+            object_id=request.data.get("object_id"))
         serializer = CitizenSerializer(
             citizen, data=request.data, partial=True)
         if serializer.is_valid():
@@ -52,7 +52,7 @@ class CitizenAPI(APIView):
 
     def delete(self, request):
         citizen = Citizen.objects.get(
-            citizen_id=request.data.get("citizen_id"))
+            object_id=request.data.get("object_id"))
         citizen.delete()
         return Response(status=204)
 
